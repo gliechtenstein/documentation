@@ -1830,6 +1830,124 @@ Check out a functional demo app with backend server, with user accounts
 
 ---
 
+##── OAUTH ──
+
+---
+
+Implements [OAuth 1.0](https://oauth.net/1/) and [OAuth 2.0](https://oauth.net/2/) specs in JSON.
+
+---
+
+## $oauth.auth
+Signing into OAuth protected APIs
+
+### ■ options
+
+The auth action takes the following options attributes.
+
+
+attribute     |     description
+--------------|--------------------------
+version       | `"1"` for OAuth 1. `"2"` for OAuth 2. If you leave it out it's `"2"` by default.
+request       | parameters for request phase (OAuth 1 only)
+authorize     | parameters for authorization phase
+access        | parameters for access phase
+
+Each of above attributes in turn contains the following attributes in order to describe the process.
+
+attribute     |     description
+--------------|--------------------------
+client_id     | client_id 
+client_secret | client_secret (if needed)
+scheme        | `http` or `https`
+host          | the root url (example: `www.tumblr.com`, `api.tumblr.com`, etc.)
+path          | the API endpoint path for each step. (example: `/oauth/access_token`, `/oauth/authorize`, `/oauth/request_token`, etc.)
+data          | body parameters to pass in case needed
+
+OAuth 1 example:
+
+    {
+    	"type": "$oauth.auth",
+    	"options": {
+    		"version": "1",
+    		"request": {
+    			"client_id": "{{$keys.client_id}}",
+    			"client_secret": "{{$keys.client_secret}}",
+    			"scheme": "https",
+    			"host": "www.tumblr.com",
+    			"path": "/oauth/request_token",
+    			"data": {
+    				"oauth_callback": "{{$env.url_scheme}}://oauth"
+    			}
+    		},
+    		"authorize": {
+    			"client_id": "{{$keys.client_id}}",
+    			"client_secret": "{{$keys.client_secret}}",
+    			"scheme": "https",
+    			"host": "www.tumblr.com",
+    			"path": "/oauth/authorize"
+    		},
+    		"access": {
+    			"client_id": "{{$keys.client_id}}",
+    			"client_secret": "{{$keys.client_secret}}",
+    			"scheme": "https",
+    			"host": "www.tumblr.com",
+    			"path": "/oauth/access_token"
+    		}
+    	},
+    	"success": {
+    	  ..
+    	},
+    	"error": {
+    	  ..
+    	}
+    }
+
+OAuth 2 example:
+
+    {
+    	"type": "$oauth.auth",
+    	"options": {
+    		"authorize": {
+    			"client_id": "{{$keys.client_id}}",
+    			"client_secret": "{{$keys.client_secret}}",
+    			"scheme": "https",
+    			"host": "api.producthunt.com",
+    			"path": "/v1/oauth/authorize",
+    			"data": {
+    				"redirect_uri": "{{$env.url_scheme}}://oauth",
+    				"response_type": "code",
+    				"scope": "public"
+    			}
+    		},
+    		"access": {
+    			"client_id": "{{$keys.client_id}}",
+    			"client_secret": "{{$keys.client_secret}}",
+    			"scheme": "https",
+    			"host": "api.producthunt.com",
+    			"path": "/v1/oauth/token",
+    			"data": {
+    				"grant_type": "authorization_code",
+    				"redirect_uri": "{{$env.url_scheme}}://oauth"
+    			}
+    		}
+    	},
+    	"success": {
+    		"trigger": "fetch"
+    	}
+    }
+
+
+## $outh.request
+Making requests to OAuth-based API endpoints once authorized
+
+## $oauth.reset
+Signing out
+
+
+---
+
+<br>
 
 ##── VARIABLE ──
 Use $set and $get to set and get local variables.
