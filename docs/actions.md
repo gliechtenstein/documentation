@@ -1941,13 +1941,68 @@ OAuth 2 example:
 ## $outh.request
 Making requests to OAuth-based API endpoints once authorized
 
+### ■ options
+
+attribute     |     description
+--------------|--------------------------
+version       | `"1"` for OAuth 1. `"2"` for OAuth 2. If you leave it out it's `"2"` by default.
+client_id     | client_id
+client_secret | client_secret
+host          | the root url (example: `www.tumblr.com`, `api.tumblr.com`, etc.)
+path          | the API endpoint path for each step. (example: `/oauth/access_token`, `/oauth/authorize`, `/oauth/request_token`, etc.)
+data          | body parameters to pass in case needed
+
+OAuth 1 sample:
+
+    {
+      "type": "$oauth.request",
+      "options": {
+        "client_id": "{{$keys.client_id}}",
+        "client_secret": "{{$keys.client_secret}}",
+        "version": "1",
+        "path": "/v2/user/dashboard",
+        "scheme": "https",
+        "host": "api.tumblr.com"
+      },
+      "success": {
+        ..
+      },
+      "error": {
+        ..
+      }
+    }
+
+OAuth 2 sample:
+
+    {
+      "type": "$oauth.request",
+      "options": {
+        "client_id": "{{$keys.client_id}}",
+        "path": "/events",
+        "data": {
+          "access_token": "{{$oauth.access_token}}"
+        },
+        "scheme": "https",
+        "host": "api.github.com"
+      },
+      "error": {
+        ..
+      },
+      "success": {
+        ..
+      }
+    }
+
 ## $oauth.access_token
 Getting the access token for a given client_id, useful for building custom requests.
 Will trigger an error if no access token can be retrieved.
 
+The only difference between OAuth 1 and 2 actions is the version number in the options.
+
     {
       "type": "$oauth.access_token",
       "options": {
+        "version": "2",
         "access": {
         "client_id": "{{$keys.client_id}}"
       },
