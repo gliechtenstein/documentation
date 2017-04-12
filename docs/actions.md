@@ -1961,7 +1961,24 @@ Will trigger an error if no access token can be retrieved.
 
 
 ## $oauth.reset
-Signing out
+Signing out, deleting the stored access token for a given client_id.
+
+The only difference between OAuth 1 and 2 actions is the version number in the options.
+
+    "action": {
+      "type": "$oauth.reset",
+      "options": {
+        "version": "2",
+        "client_id": "{{$keys.client_id}}"
+      },
+      "success": {
+        ..
+      },
+      "error": {
+        ..
+      }
+    }
+
 
 
 ---
