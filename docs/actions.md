@@ -1941,6 +1941,25 @@ OAuth 2 example:
 ## $outh.request
 Making requests to OAuth-based API endpoints once authorized
 
+## $oauth.access_token
+Getting the access token for a given client_id, useful for building custom requests.
+Will trigger an error if no access token can be retrieved.
+
+    {
+      "type": "$oauth.access_token",
+      "options": {
+        "access": {
+        "client_id": "{{$keys.client_id}}"
+      },
+      "success": {
+        ..
+      },
+      "error": {
+        ..
+      }
+    },
+
+
 ## $oauth.reset
 Signing out
 
